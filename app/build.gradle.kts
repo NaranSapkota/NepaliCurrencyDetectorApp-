@@ -27,20 +27,22 @@ android {
         }
     }
 
-//     Enable ViewBinding to easily access UI elements
+    // Enable ViewBinding to easily access UI elements
     buildFeatures {
         viewBinding = true
-        mlModelBinding = true
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     kotlinOptions {
         jvmTarget = "11"
     }
+
     aaptOptions {
-        noCompress += "tflite"
+        noCompress("tflite")
     }
 }
 
