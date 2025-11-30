@@ -39,6 +39,9 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    aaptOptions {
+        noCompress += "tflite"
+    }
 }
 
 dependencies {
