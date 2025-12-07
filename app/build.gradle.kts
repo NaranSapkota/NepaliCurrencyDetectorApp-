@@ -15,21 +15,27 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
 
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+        ndk {
+            abiFilters += listOf("armeabi-v7a", "arm64-v8a")
         }
     }
 
-    // Enable ViewBinding to easily access UI elements
     buildFeatures {
         viewBinding = true
+    }
+
+    packaging {
+        jniLibs {
+            excludes += listOf("**/META-INF/**")
+        }
+        resources {
+            excludes += listOf("META-INF/**")
+        }
+    }
+
+    aaptOptions {
+        noCompress("tflite")
     }
 
     compileOptions {
@@ -40,37 +46,21 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
-
-    aaptOptions {
-        noCompress("tflite")
-    }
-    packagingOptions {
-        jniLibs {
-            useLegacyPackaging = true
-        }
-    }
 }
 
-    dependencies {
-        implementation(libs.androidx.core.ktx)
-        implementation(libs.androidx.appcompat)
-        implementation(libs.material)
-        implementation(libs.androidx.activity)
-        implementation(libs.androidx.constraintlayout)
+dependencies {
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material)
+    implementation(libs.androidx.activity)
+    implementation(libs.androidx.constraintlayout)
 
-        testImplementation(libs.junit)
-        androidTestImplementation(libs.androidx.junit)
-        androidTestImplementation(libs.androidx.espresso.core)
+    // CameraX
+    implementation(libs.androidx.camera.core)
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
 
-        // --- CameraX Dependencies ---
-        implementation(libs.androidx.camera.core)
-        implementation(libs.androidx.camera.camera2)
-        implementation(libs.androidx.camera.lifecycle)
-        implementation(libs.androidx.camera.view)
-
-        // --- TensorFlow Lite Dependencies ---
-        implementation(libs.tensorflow.lite)
-        implementation(libs.tensorflow.lite.support)
-        implementation(libs.tensorflow.lite.gpu)
-        implementation(libs.tensorflow.lite.task.vision)
-    }
+    // TensorFlow Lite - The task-vision library transitively includes the correct versions of the core and support libraries.
+    implementation("org.tensorflow:tensorflow-lite-task-vision:0.4.4")
+}
